@@ -1,7 +1,11 @@
+import { prefetchDNS } from "react-dom";
 import Confetti from "./confetti";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+// O total de conteúdos não precisa ser em tempo real: a página é gerada
+// estaticamente e revalidada em segundo plano a cada 60s (ISR), em vez de
+// esperar a API do TabNews a cada requisição.
+export const revalidate = 60;
 
 const TABNEWS_URL = "https://www.tabnews.com.br";
 
@@ -9,7 +13,11 @@ async function getTotalContents() {
   try {
     const response = await fetch(
       `${TABNEWS_URL}/api/v1/contents?per_page=1&strategy=new`,
-      { cache: "no-store" },
+      {
+        next: { revalidate },
+        // Não deixa uma API lenta segurar a geração da página.
+        signal: AbortSignal.timeout(3000),
+      },
     );
 
     if (!response.ok) return null;
@@ -22,6 +30,11 @@ async function getTotalContents() {
 }
 
 export default async function Home() {
+  // O botão principal leva ao TabNews: resolve o DNS enquanto a página carrega,
+  // para o clique não pagar esse custo. Só DNS (barato); um preconnect abriria
+  // TCP+TLS que provavelmente seria descartado antes do clique.
+  prefetchDNS(TABNEWS_URL);
+
   const totalContents = await getTotalContents();
 
   return (
