@@ -14,7 +14,6 @@ export default function Confetti() {
   useEffect(() => {
     // Respeita quem pediu menos animação (e economiza CPU/bateria).
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDone(true);
       return;
     }
 
