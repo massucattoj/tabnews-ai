@@ -1,0 +1,13 @@
+# Build
+.next
+out
+build
+next-env.d.ts
+
+# Arquivos gerados
+package-lock.json
+skills-lock.json
+
+# Skills de terceiros (o skills-lock.json guarda o hash do conteúdo)
+.agents
+.claude
