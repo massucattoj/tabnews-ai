@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "16.2.12",
@@ -20,6 +21,15 @@
     "eslint": "9.39.5",
     "eslint-config-next": "16.2.12",
     "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.2",
     "prettier": "3.10.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,mjs,cjs}": [
+      "eslint --fix --max-warnings=0 --no-warn-ignored",
+      "prettier --write"
+    ],
+    "!(*.{js,jsx,mjs,cjs})": "prettier --write --ignore-unknown"
   }
 }
